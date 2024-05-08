@@ -5,38 +5,34 @@
         <a href="#">Product</a>
         <a href="#">About us</a>
     </nav>
-
-    <div v-for="(prtd, i) in roomData" :key="i">
-        <img :src="prtd.image" alt="room">
-        <h3 @click="isModalTrue[i] = true"> {{ prtd.title }} </h3>
-        <p> {{ prtd.price }} </p>
-        <section class="modal" v-if="isModalTrue[i]">
+    
+    <div class="item" v-for="(room, index) in roomData" :key="index">
+        <img :src="room.image" :alt="index">
+        <h3> {{ room.title }} </h3>
+        <p> {{ room.price }}원 </p>
+        <button @click="detailChange(index)">자세히보기</button>
+        <p> {{ detailIsTrue[index] }} </p>
+        <section class="detail" v-if="detailIsTrue[index]">
             <div>
-                <h3> {{ prtd.title }} </h3>
-                <p> 상세 페이지 내용임 </p>
-                <button @click="isModalTrue[i] = false">X 닫기</button>
+                <img :src="room.image" :alt="index">
+                <h3> {{ room.title }} </h3>
+                <h6> {{ room.content }} </h6>
+                <p> {{ room.price }}원 </p>
+                <button @click="detailChange(index)">X 닫기</button>
             </div>
         </section>
     </div>
 </template>
 
-<script>
+<script setup>
     import {roomData} from "./assets/data.js";
 
-    export default {
-        name: 'App',
-        data() {
-            return {
-                roomData, 
-                isModalTrue : [false, false, false, false, false]
-            }
-        },
-        methods: {
+    import { ref } from "vue"
 
-        },
-        components: {
+    const detailIsTrue = ref([false, false, false, false, false, false])
 
-        }
+    const detailChange = (index) => {
+        detailIsTrue.value[index] = !detailIsTrue.value[index]
     }
 </script>
 
@@ -49,56 +45,50 @@
         color: #2c3e50;
     }
 
-    .menu {
+    nav.menu {
+        width: 100%;
+        height: 100px;
         background-color: darkslateblue;
-        padding: 15px;
-        border-radius: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     .menu a {
         color: white;
-        padding: 10px;
         text-decoration: none;
+        margin: 0 30px;
     }
 
-    img {
+    .item {
         width: 50%;
-        margin: 30px;
+        margin: 0 auto;
     }
 
-    body {
-        position: relative;
+    .item > img {
+        width: 100%;
     }
 
-    .modal {
+    .detail {
         display: flex;
         justify-content: center;
         align-items: center;
         position: fixed;
         top: 0;
         left: 0;
-        background-color: rgba(0, 0, 0, .5);
         width: 100vw;
         height: 100vh;
+        background-color: rgba(0, 0, 0, .5);
     }
 
-    .modal div {
-        width: 600px;
-        height: 200px;
-        border-radius: 15px;
+    .detail div {
         background-color: #fff;
-        z-index: 100000;
+        width: 600px;
+        height: 400px;
+        padding: 15px;
     }
 
-    .modal button {
-        width: 100px;
-        height: 40px;
-        margin-left: 450px; 
-        margin-top: 40px;
-        border: none;
-        background-color: #333;
-        color: #fff;
-        border-radius: 15px;
-        cursor: pointer;
+    .detail img {
+        width: 70%;
     }
 </style>
